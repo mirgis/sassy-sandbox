@@ -1,0 +1,25 @@
+<!--
+  First example of running Python code using Pyodide in the web browser
+  (without using the HTML canvas element). Displays a blank web page with
+  a "Loading..." label, which is then replaced by "Hello, world!".
+  by mirgis ‹github.com/mirgis›
+  on 2025-07-16
+-->
+
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1 id="output">Loading...</h1>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+    <script>
+      async function main() {
+        const pyodide = await loadPyodide();
+        await pyodide.runPythonAsync(`
+from js import document
+document.getElementById("output").innerHTML = "Hello, world!"
+        `);
+      }
+      main();
+    </script>
+  </body>
+</html>

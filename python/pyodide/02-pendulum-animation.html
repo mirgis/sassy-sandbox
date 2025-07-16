@@ -1,0 +1,67 @@
+<!--
+  Simple pendulum animation implemented in Python using Pyodide, running in a web browser.
+  by mirgis ‹github.com/mirgis›
+  on 2025-07-16
+-->
+
+<!DOCTYPE html>
+<html>
+  <body>
+    <canvas id="canvas" width="400" height="400" style="border:1px solid #ccc;"></canvas>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+    <script>
+    async function main() {
+      const pyodide = await loadPyodide();
+      await pyodide.runPythonAsync(`
+from js import document, setInterval
+from pyodide.ffi import create_proxy
+import math
+
+# get canvas context
+canvas = document.getElementById("canvas")
+ctx = canvas.getContext("2d")
+
+# pendulum parameters
+L = 150              # length of the string (in pixels)
+g = 9.81             # gravitational acceleration
+theta = math.pi / 4  # initial angle (45°)
+omega = 0            # angular velocity
+dt = 0.3             # time step
+pivot_x = 200        # pivot x-coordinate
+pivot_y = 100        # point y-coordinate
+
+def draw():
+    global theta, omega
+
+    # physics update
+    alpha = -g / L * math.sin(theta)  # angular acceleration
+    omega += alpha * dt
+    omega *= 0.996  # simulate energy loss (damping)
+    theta += omega * dt
+
+    # compute bob position
+    x = pivot_x + L * math.sin(theta)
+    y = pivot_y + L * math.cos(theta)
+
+    # drawing
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    ctx.fillStyle = "red"
+
+    ctx.beginPath()
+    ctx.moveTo(pivot_x, pivot_y)
+    ctx.lineTo(x, y)
+    ctx.stroke()
+
+    ctx.beginPath()
+    ctx.arc(x, y, 10, 0, 2 * math.pi)
+    ctx.fill()
+
+# proxy and animation
+draw_proxy = create_proxy(draw)
+setInterval(draw_proxy, int(1000 / 60))  # 60 FPS
+        `);
+      }
+      main();
+    </script>
+  </body>
+</html>

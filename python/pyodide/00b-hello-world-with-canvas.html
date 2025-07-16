@@ -1,0 +1,35 @@
+<!--
+  Second example of running Python code using Pyodide in the web browser
+  using the HTML canvas element. Displays "Hello, world!" centered inside
+  a black rectangle – the canvas.
+  by mirgis ‹github.com/mirgis›
+  on 2025-07-16
+-->
+
+<!DOCTYPE html>
+<html>
+  <body>
+    <canvas id="canvas" width="400" height="200" style="border: 1px solid;"></canvas>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+    <script>
+      async function main() {
+        const pyodide = await loadPyodide();
+        await pyodide.runPythonAsync(`
+from js import document
+
+# get canvas context
+canvas = document.getElementById("canvas")
+ctx = canvas.getContext("2d")
+
+# set font style and color
+ctx.font = "30px Arial"
+ctx.fillStyle = "blue"
+
+# draw text
+ctx.fillText("Hello, world!", 50, 100)
+        `);
+      }
+      main();
+    </script>
+  </body>
+</html>

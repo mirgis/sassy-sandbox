@@ -1,0 +1,51 @@
+<!--
+  Third example of running Python code with Pyodide in the web browser.
+  Displays a rotating red square in the center of the canvas.
+  by mirgis ‹github.com/mirgis›
+  on 2025-07-16
+-->
+
+<!DOCTYPE html>
+<html>
+  <body>
+    <canvas id="canvas" width="300" height="300" style="border: 1px solid;"></canvas>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+    <script>
+      async function main() {
+        const pyodide = await loadPyodide();
+        await pyodide.runPythonAsync(`
+from js import document, setInterval
+from pyodide.ffi import create_proxy
+
+# get canvas context
+canvas = document.getElementById("canvas")
+ctx = canvas.getContext("2d")
+
+# rectangle settings
+angle = 0.0
+cx = canvas.width / 2
+cy = canvas.height / 2
+size = 50
+dt = 0.02
+
+def draw():
+    global angle
+    angle += dt
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+    ctx.save()
+    ctx.translate(cx, cy)
+    ctx.rotate(angle)
+    ctx.fillStyle = "red"
+    ctx.fillRect(-size/2, -size/2, size, size)
+    ctx.restore()
+
+draw_proxy = create_proxy(draw)
+setInterval(draw_proxy, int(1000 / 60))  # 60 FPS
+        `);
+      }
+      main();
+    </script>
+  </body>
+</html>
