@@ -10,9 +10,9 @@
     <canvas id="canvas" width="400" height="400" style="border:1px solid #ccc;"></canvas>
     <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
     <script>
-    async function main() {
-      const pyodide = await loadPyodide();
-      await pyodide.runPythonAsync(`
+      async function main() {
+        const pyodide = await loadPyodide();
+        await pyodide.runPythonAsync(`
 from js import document, setInterval
 from pyodide.ffi import create_proxy
 import math
