@@ -7,6 +7,6 @@ sassy-sandbox/
 ├── github/          # stuff to improve GitHub skills
 ├── python/          # projects and scripts in Python
 │   ├── animations/  # simple animation examples
-│   ╰── pyodide/     # simple animations for web browsers
-╰── README.md        # this file
+│   └── pyodide/     # simple animations for web browsers
+└── README.md        # this file
 ```
